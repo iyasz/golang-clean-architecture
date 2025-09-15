@@ -1,0 +1,50 @@
+package config
+
+import (
+	"fmt"
+	"os"
+	"strconv"
+
+	"github.com/joho/godotenv"
+)
+
+func getEnvInt(val string) int {
+	res, err := strconv.Atoi(val)
+	if err != nil {
+		panic(fmt.Errorf("failed to convert to integer: %w", err))
+	}
+
+	return res
+}
+
+func Load() *Config {
+	err := godotenv.Load()
+
+	if err != nil {
+		panic(fmt.Errorf("fatal error config file: %w", err))
+	}
+
+	return &Config{
+		App: App{
+			Name: os.Getenv("APP_NAME"),
+		},
+		Server: Server{
+			Host: os.Getenv("SERVER_HOST"),
+			Port: os.Getenv("SERVER_PORT"),
+			Prefork: os.Getenv("SERVER_PREFORK"),
+		},
+		Database: Database{
+			Host: os.Getenv("DATABASE_HOST"),
+			Port: os.Getenv("DATABASE_PORT"),
+			Name: os.Getenv("DATABASE_NAME"),
+			User: os.Getenv("DATABASE_USER"),
+			Password: os.Getenv("DATABASE_PASSWORD"),
+			Timezone: os.Getenv("DATABASE_TIMEZONE"),
+			Pool: Pool{
+				Idle: getEnvInt(os.Getenv("POOL_IDLE")),
+				Max: getEnvInt(os.Getenv("POOL_MAX")),
+				Lifetime: getEnvInt(os.Getenv("POOL_LIFETIME")),
+			},
+		},
+	}
+}
