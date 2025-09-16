@@ -5,18 +5,10 @@ import (
 )
 
 func main() {
-
 	conf := config.Load()
-
-	// Logging 
 	log := config.NewLlogger(&conf.Logrus)
-	
-	// Database 
 	db := config.NewDatabase(&conf.Database, log)
-
-	// Validator 
 	validate := config.NewValidator()
-
 	app := config.NewChi(conf)
 
 	config.Bootstrap(&config.BootstrapConfig{
