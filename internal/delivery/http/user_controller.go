@@ -95,7 +95,7 @@ func (c *UserController) Logout(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	helper.SuccessResponse(w, model.WebResponse[bool]{Data: response}, http.StatusOK)
+	helper.SuccessResponse(w, model.WebResponse[bool]{Data: response}, http.StatusNoContent)
 }
 
 func (c *UserController) Update(w http.ResponseWriter, r *http.Request) {

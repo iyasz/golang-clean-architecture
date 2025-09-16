@@ -5,6 +5,7 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/iyasz/golang-clean-architecture/internal/delivery/http"
 	"github.com/iyasz/golang-clean-architecture/internal/delivery/http/middleware"
+	"github.com/iyasz/golang-clean-architecture/internal/delivery/http/route"
 	"github.com/iyasz/golang-clean-architecture/internal/repository"
 	"github.com/iyasz/golang-clean-architecture/internal/usecase"
 	"github.com/sirupsen/logrus"
@@ -32,8 +33,12 @@ func Bootstrap(config *BootstrapConfig) {
 
 	// setup controller 
 	userController := http.NewUserController(config.Log, userUseCase)
+	contactController := http.NewContactController(config.Log, contactUseCase)
+	addressController := http.NewAddressController(config.Log, addressUseCase)
 
 	// setup middleware
 	authMiddleware := middleware.NewAuth(userUseCase)
+
+	routeConfig := route.RouteConfig{}
 
 }
