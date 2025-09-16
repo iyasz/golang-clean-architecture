@@ -3,7 +3,7 @@ package config
 import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-playground/validator/v10"
-	"github.com/iyasz/golang-clean-architecture/internal/delivery/http"
+	"github.com/iyasz/golang-clean-architecture/internal/delivery/http/controller"
 	"github.com/iyasz/golang-clean-architecture/internal/delivery/http/middleware"
 	"github.com/iyasz/golang-clean-architecture/internal/delivery/http/route"
 	"github.com/iyasz/golang-clean-architecture/internal/repository"
@@ -13,9 +13,9 @@ import (
 )
 
 type BootstrapConfig struct {
-	DB  *gorm.DB
-	App *chi.Mux
-	Log *logrus.Logger
+	DB       *gorm.DB
+	App      *chi.Mux
+	Log      *logrus.Logger
 	Validate *validator.Validate
 }
 
@@ -31,20 +31,20 @@ func Bootstrap(config *BootstrapConfig) {
 	contactUseCase := usecase.NewContactUseCase(config.DB, config.Log, config.Validate, contactRepository)
 	addressUseCase := usecase.NewAddressUseCase(config.DB, config.Log, config.Validate, addressRepository, contactRepository)
 
-	// setup controller 
-	userController := http.NewUserController(config.Log, userUseCase)
-	contactController := http.NewContactController(config.Log, contactUseCase)
-	addressController := http.NewAddressController(config.Log, addressUseCase)
+	// setup controller
+	userController := controller.NewUserController(config.Log, userUseCase)
+	contactController := controller.NewContactController(config.Log, contactUseCase)
+	addressController := controller.NewAddressController(config.Log, addressUseCase)
 
 	// setup middleware
 	authMiddleware := middleware.NewAuth(userUseCase)
 
 	routeConfig := route.RouteConfig{
-		App: config.App,
-		UserController: userController,
+		App:               config.App,
+		UserController:    userController,
 		ContactController: contactController,
 		AddressController: addressController,
-		AuthMiddleware: authMiddleware,
+		AuthMiddleware:    authMiddleware,
 	}
 
 	routeConfig.Setup()
