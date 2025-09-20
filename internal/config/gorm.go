@@ -21,12 +21,14 @@ func (l *logrusWriter) Printf(message string, args ...interface{}) {
 func NewDatabase(config *Database, log *logrus.Logger) *gorm.DB {
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=%s",
 		config.Host,
-		config.Name,
+		config.User,
 		config.Password,
 		config.Name,
 		config.Port,
 		config.Timezone,
 	)
+
+	log.Debugf(dsn)
 
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
 		Logger: logger.New(&logrusWriter{Logger: log}, logger.Config{

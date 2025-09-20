@@ -46,5 +46,8 @@ func Load() *Config {
 				Lifetime: getEnvInt(os.Getenv("POOL_LIFETIME")),
 			},
 		},
+		Logrus: Logrus{
+			Level: int32(getEnvInt(os.Getenv("LOG_LEVEL"))),
+		},
 	}
 }
