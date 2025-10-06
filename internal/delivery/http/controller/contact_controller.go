@@ -155,5 +155,5 @@ func (c *ContactController) Delete(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	helper.SuccessResponse(w, model.WebResponse[bool]{Data: true}, http.StatusNoContent)
+	helper.SuccessResponse(w, model.WebResponse[bool]{Data: true}, http.StatusOK)
 }
