@@ -5,7 +5,7 @@ import (
 )
 
 func main() {
-	conf := config.Load()
+	conf := config.Load("prod")
 	log := config.NewLlogger(&conf.Logrus)
 	db := config.NewDatabase(&conf.Database, log)
 	validate := config.NewValidator()

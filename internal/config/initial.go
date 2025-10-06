@@ -3,6 +3,7 @@ package config
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 	"strconv"
 
 	"github.com/joho/godotenv"
@@ -17,8 +18,12 @@ func getEnvInt(val string) int {
 	return res
 }
 
-func Load() *Config {
+func Load(appEnv string) *Config {
 	err := godotenv.Load()
+
+	if appEnv == "test" {
+		err = godotenv.Load(filepath.Join("..", ".env.test"))
+	}
 
 	if err != nil {
 		panic(fmt.Errorf("fatal error config file: %w", err))
