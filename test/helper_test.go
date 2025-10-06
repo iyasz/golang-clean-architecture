@@ -1,11 +1,18 @@
 package test
 
 import (
+	"net/http"
 	"strconv"
 	"testing"
-	"github.com/stretchr/testify/assert"
+
 	"github.com/google/uuid"
 	"github.com/iyasz/golang-clean-architecture/internal/entity"
+	"github.com/stretchr/testify/assert"
+)
+
+const (
+	BaseUsersAPIURL = "/api/users"
+	BaseContactsAPIURL = "/api/contacts"
 )
 
 func ClearAll() {
@@ -39,7 +46,7 @@ func CreateContacts(user *entity.User, total int) {
 	for i := 0; i < total; i++ {
 		contact := &entity.Contact{
 			ID:        uuid.NewString(),
-			FirstName: "Contact",
+			FirstName: "contact",
 			LastName:  strconv.Itoa(i),
 			Email:     "contact" + strconv.Itoa(i) + "@example.com",
 			Phone:     "08000000" + strconv.Itoa(i),
@@ -87,4 +94,9 @@ func GetFirstAddress(t *testing.T, contact *entity.Contact) *entity.Address {
 	err := db.Where("contact_id = ?", contact.ID).First(address).Error
 	assert.Nil(t, err)
 	return address
+}
+
+func SetupHeader(req *http.Request) {
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Accept", "application/json")
 }

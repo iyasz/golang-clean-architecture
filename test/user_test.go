@@ -25,15 +25,12 @@ func TestRegister(t *testing.T) {
 	bodyJson, err := json.Marshal(requestBody)
 	assert.Nil(t, err)
 
-	// Buat server Chi untuk testing
 	server := httptest.NewServer(app)
 	defer server.Close()
 
-	// Kirim request ke server
-	req, err := http.NewRequest(http.MethodPost, server.URL+"/api/users", strings.NewReader(string(bodyJson)))
+	req, err := http.NewRequest(http.MethodPost, server.URL+BaseUsersAPIURL, strings.NewReader(string(bodyJson)))
 	assert.Nil(t, err)
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Accept", "application/json")
+	SetupHeader(req)
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
@@ -47,7 +44,7 @@ func TestRegister(t *testing.T) {
 	err = json.Unmarshal(bytes, responseBody)
 	assert.Nil(t, err)
 
-	assert.Equal(t, http.StatusOK, resp.StatusCode)
+	assert.Equal(t, http.StatusCreated, resp.StatusCode)
 	assert.Equal(t, requestBody.ID, responseBody.Data.ID)
 	assert.Equal(t, requestBody.Name, responseBody.Data.Name)
 	assert.NotNil(t, responseBody.Data.CreatedAt)
@@ -65,15 +62,12 @@ func TestRegisterError(t *testing.T) {
 	bodyJson, err := json.Marshal(requestBody)
 	assert.Nil(t, err)
 
-	// Buat server Chi untuk testing
 	server := httptest.NewServer(app)
 	defer server.Close()
 
-	// Kirim request ke server
-	req, err := http.NewRequest(http.MethodPost, server.URL+"/api/users", strings.NewReader(string(bodyJson)))
+	req, err := http.NewRequest(http.MethodPost, server.URL+BaseUsersAPIURL, strings.NewReader(string(bodyJson)))
 	assert.Nil(t, err)
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Accept", "application/json")
+	SetupHeader(req)
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
@@ -93,7 +87,7 @@ func TestRegisterError(t *testing.T) {
 
 func TestRegisterDuplicate(t *testing.T) {
 	ClearAll()
-	TestRegister(t) // register success
+	TestRegister(t)
 
 	requestBody := model.RegisterUserRequest{
 		ID:       "khannedy",
@@ -104,15 +98,12 @@ func TestRegisterDuplicate(t *testing.T) {
 	bodyJson, err := json.Marshal(requestBody)
 	assert.Nil(t, err)
 
-	// Buat server Chi untuk testing
 	server := httptest.NewServer(app)
 	defer server.Close()
 
-	// Kirim request ke server
-	req, err := http.NewRequest(http.MethodPost, server.URL+"/api/users", strings.NewReader(string(bodyJson)))
+	req, err := http.NewRequest(http.MethodPost, server.URL+BaseUsersAPIURL, strings.NewReader(string(bodyJson)))
 	assert.Nil(t, err)
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Accept", "application/json")
+	SetupHeader(req)
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
@@ -131,7 +122,7 @@ func TestRegisterDuplicate(t *testing.T) {
 }
 
 func TestLogin(t *testing.T) {
-	TestRegister(t) // register success
+	TestRegister(t)
 
 	requestBody := model.LoginUserRequest{
 		ID:       "khannedy",
@@ -141,15 +132,12 @@ func TestLogin(t *testing.T) {
 	bodyJson, err := json.Marshal(requestBody)
 	assert.Nil(t, err)
 
-	// Buat server Chi untuk testing
 	server := httptest.NewServer(app)
 	defer server.Close()
 
-	// Kirim request ke server
-	req, err := http.NewRequest(http.MethodPost, server.URL+"/api/users/_login", strings.NewReader(string(bodyJson)))
+	req, err := http.NewRequest(http.MethodPost, server.URL+BaseUsersAPIURL+"/_login", strings.NewReader(string(bodyJson)))
 	assert.Nil(t, err)
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Accept", "application/json")
+	SetupHeader(req)
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
@@ -174,7 +162,7 @@ func TestLogin(t *testing.T) {
 
 func TestLoginWrongUsername(t *testing.T) {
 	ClearAll()
-	TestRegister(t) // register success
+	TestRegister(t)
 
 	requestBody := model.LoginUserRequest{
 		ID:       "wrong",
@@ -184,15 +172,12 @@ func TestLoginWrongUsername(t *testing.T) {
 	bodyJson, err := json.Marshal(requestBody)
 	assert.Nil(t, err)
 
-	// Buat server Chi untuk testing
 	server := httptest.NewServer(app)
 	defer server.Close()
 
-	// Kirim request ke server
-	req, err := http.NewRequest(http.MethodPost, server.URL+"/api/users/_login", strings.NewReader(string(bodyJson)))
+	req, err := http.NewRequest(http.MethodPost, server.URL+BaseUsersAPIURL+"/_login", strings.NewReader(string(bodyJson)))
 	assert.Nil(t, err)
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Accept", "application/json")
+	SetupHeader(req)
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
@@ -212,7 +197,7 @@ func TestLoginWrongUsername(t *testing.T) {
 
 func TestLoginWrongPassword(t *testing.T) {
 	ClearAll()
-	TestRegister(t) // register success
+	TestRegister(t)
 
 	requestBody := model.LoginUserRequest{
 		ID:       "khannedy",
@@ -222,15 +207,12 @@ func TestLoginWrongPassword(t *testing.T) {
 	bodyJson, err := json.Marshal(requestBody)
 	assert.Nil(t, err)
 
-	// Buat server Chi untuk testing
 	server := httptest.NewServer(app)
 	defer server.Close()
 
-	// Kirim request ke server
-	req, err := http.NewRequest(http.MethodPost, server.URL+"/api/users/_login", strings.NewReader(string(bodyJson)))
+	req, err := http.NewRequest(http.MethodPost, server.URL+BaseUsersAPIURL+"/_login", strings.NewReader(string(bodyJson)))
 	assert.Nil(t, err)
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Accept", "application/json")
+	SetupHeader(req)
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
@@ -250,21 +232,18 @@ func TestLoginWrongPassword(t *testing.T) {
 
 func TestLogout(t *testing.T) {
 	ClearAll()
-	TestLogin(t) // login success
+	TestLogin(t) 
 
 	user := new(entity.User)
 	err := db.Where("id = ?", "khannedy").First(user).Error
 	assert.Nil(t, err)
 
-	// Buat server Chi untuk testing
 	server := httptest.NewServer(app)
 	defer server.Close()
 
-	// Kirim request ke server
-	req, err := http.NewRequest(http.MethodDelete, server.URL+"/api/users", nil)
+	req, err := http.NewRequest(http.MethodDelete, server.URL+BaseUsersAPIURL, nil)
 	assert.Nil(t, err)
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Accept", "application/json")
+	SetupHeader(req)
 	req.Header.Set("Authorization", user.Token)
 
 	client := &http.Client{}
@@ -285,17 +264,14 @@ func TestLogout(t *testing.T) {
 
 func TestLogoutWrongAuthorization(t *testing.T) {
 	ClearAll()
-	TestLogin(t) // login success
+	TestLogin(t)
 
-	// Buat server Chi untuk testing
 	server := httptest.NewServer(app)
 	defer server.Close()
 
-	// Kirim request ke server
-	req, err := http.NewRequest(http.MethodDelete, server.URL+"/api/users", nil)
+	req, err := http.NewRequest(http.MethodDelete, server.URL+BaseUsersAPIURL, nil)
 	assert.Nil(t, err)
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Accept", "application/json")
+	SetupHeader(req)
 	req.Header.Set("Authorization", "wrong")
 
 	client := &http.Client{}
@@ -316,21 +292,18 @@ func TestLogoutWrongAuthorization(t *testing.T) {
 
 func TestGetCurrentUser(t *testing.T) {
 	ClearAll()
-	TestLogin(t) // login success
+	TestLogin(t)
 
 	user := new(entity.User)
 	err := db.Where("id = ?", "khannedy").First(user).Error
 	assert.Nil(t, err)
 
-	// Buat server Chi untuk testing
 	server := httptest.NewServer(app)
 	defer server.Close()
 
-	// Kirim request ke server
-	req, err := http.NewRequest(http.MethodGet, server.URL+"/api/users/_current", nil)
+	req, err := http.NewRequest(http.MethodGet, server.URL+BaseUsersAPIURL+"/_current", nil)
 	assert.Nil(t, err)
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Accept", "application/json")
+	SetupHeader(req)
 	req.Header.Set("Authorization", user.Token)
 
 	client := &http.Client{}
@@ -354,17 +327,14 @@ func TestGetCurrentUser(t *testing.T) {
 
 func TestGetCurrentUserFailed(t *testing.T) {
 	ClearAll()
-	TestLogin(t) // login success
+	TestLogin(t) 
 
-	// Buat server Chi untuk testing
 	server := httptest.NewServer(app)
 	defer server.Close()
 
-	// Kirim request ke server
-	req, err := http.NewRequest(http.MethodGet, server.URL+"/api/users/_current", nil)
+	req, err := http.NewRequest(http.MethodGet, server.URL+BaseUsersAPIURL+"/_current", nil)
 	assert.Nil(t, err)
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Accept", "application/json")
+	SetupHeader(req)
 	req.Header.Set("Authorization", "wrong")
 
 	client := &http.Client{}
@@ -385,7 +355,7 @@ func TestGetCurrentUserFailed(t *testing.T) {
 
 func TestUpdateUserName(t *testing.T) {
 	ClearAll()
-	TestLogin(t) // login success
+	TestLogin(t) 
 
 	user := new(entity.User)
 	err := db.Where("id = ?", "khannedy").First(user).Error
@@ -398,15 +368,12 @@ func TestUpdateUserName(t *testing.T) {
 	bodyJson, err := json.Marshal(requestBody)
 	assert.Nil(t, err)
 
-	// Buat server Chi untuk testing
 	server := httptest.NewServer(app)
 	defer server.Close()
 
-	// Kirim request ke server
-	req, err := http.NewRequest(http.MethodPatch, server.URL+"/api/users/_current", strings.NewReader(string(bodyJson)))
+	req, err := http.NewRequest(http.MethodPatch, server.URL+BaseUsersAPIURL+"/_current", strings.NewReader(string(bodyJson)))
 	assert.Nil(t, err)
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Accept", "application/json")
+	SetupHeader(req)
 	req.Header.Set("Authorization", user.Token)
 
 	client := &http.Client{}
@@ -430,7 +397,7 @@ func TestUpdateUserName(t *testing.T) {
 
 func TestUpdateUserPassword(t *testing.T) {
 	ClearAll()
-	TestLogin(t) // login success
+	TestLogin(t) 
 
 	user := new(entity.User)
 	err := db.Where("id = ?", "khannedy").First(user).Error
@@ -443,15 +410,12 @@ func TestUpdateUserPassword(t *testing.T) {
 	bodyJson, err := json.Marshal(requestBody)
 	assert.Nil(t, err)
 
-	// Buat server Chi untuk testing
 	server := httptest.NewServer(app)
 	defer server.Close()
 
-	// Kirim request ke server
-	req, err := http.NewRequest(http.MethodPatch, server.URL+"/api/users/_current", strings.NewReader(string(bodyJson)))
+	req, err := http.NewRequest(http.MethodPatch, server.URL+BaseUsersAPIURL+"/_current", strings.NewReader(string(bodyJson)))
 	assert.Nil(t, err)
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Accept", "application/json")
+	SetupHeader(req)
 	req.Header.Set("Authorization", user.Token)
 
 	client := &http.Client{}
@@ -481,7 +445,7 @@ func TestUpdateUserPassword(t *testing.T) {
 
 func TestUpdateFailed(t *testing.T) {
 	ClearAll()
-	TestLogin(t) // login success
+	TestLogin(t) 
 
 	requestBody := model.UpdateUserRequest{
 		Password: "rahasialagi",
@@ -490,15 +454,12 @@ func TestUpdateFailed(t *testing.T) {
 	bodyJson, err := json.Marshal(requestBody)
 	assert.Nil(t, err)
 
-	// Buat server Chi untuk testing
 	server := httptest.NewServer(app)
 	defer server.Close()
 
-	// Kirim request ke server
-	req, err := http.NewRequest(http.MethodPatch, server.URL+"/api/users/_current", strings.NewReader(string(bodyJson)))
+	req, err := http.NewRequest(http.MethodPatch, server.URL+BaseUsersAPIURL+"/_current", strings.NewReader(string(bodyJson)))
 	assert.Nil(t, err)
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Accept", "application/json")
+	SetupHeader(req)
 	req.Header.Set("Authorization", "wrong")
 
 	client := &http.Client{}

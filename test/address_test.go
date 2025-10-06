@@ -28,15 +28,12 @@ func TestCreateAddress(t *testing.T) {
 	bodyJson, err := json.Marshal(requestBody)
 	assert.Nil(t, err)
 
-	// Buat server Chi untuk testing
 	server := httptest.NewServer(app)
 	defer server.Close()
 
-	// Kirim request ke server
-	req, err := http.NewRequest(http.MethodPost, server.URL+"/api/contacts/"+contact.ID+"/addresses", strings.NewReader(string(bodyJson)))
+	req, err := http.NewRequest(http.MethodPost, server.URL+BaseContactsAPIURL+"/"+contact.ID+"/addresses", strings.NewReader(string(bodyJson)))
 	assert.Nil(t, err)
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Accept", "application/json")
+	SetupHeader(req)
 	req.Header.Set("Authorization", user.Token)
 
 	client := &http.Client{}
@@ -51,7 +48,7 @@ func TestCreateAddress(t *testing.T) {
 	err = json.Unmarshal(bytes, responseBody)
 	assert.Nil(t, err)
 
-	assert.Equal(t, http.StatusOK, resp.StatusCode)
+	assert.Equal(t, http.StatusCreated, resp.StatusCode)
 	assert.Equal(t, requestBody.Street, responseBody.Data.Street)
 	assert.Equal(t, requestBody.City, responseBody.Data.City)
 	assert.Equal(t, requestBody.Province, responseBody.Data.Province)
@@ -78,15 +75,12 @@ func TestCreateAddressFailed(t *testing.T) {
 	bodyJson, err := json.Marshal(requestBody)
 	assert.Nil(t, err)
 
-	// Buat server Chi untuk testing
 	server := httptest.NewServer(app)
 	defer server.Close()
 
-	// Kirim request ke server
-	req, err := http.NewRequest(http.MethodPost, server.URL+"/api/contacts/"+contact.ID+"/addresses", strings.NewReader(string(bodyJson)))
+	req, err := http.NewRequest(http.MethodPost, server.URL+BaseContactsAPIURL+"/"+contact.ID+"/addresses", strings.NewReader(string(bodyJson)))
 	assert.Nil(t, err)
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Accept", "application/json")
+	SetupHeader(req)
 	req.Header.Set("Authorization", user.Token)
 
 	client := &http.Client{}
@@ -112,12 +106,10 @@ func TestListAddresses(t *testing.T) {
 
 	CreateAddresses(t, contact, 5)
 
-	// Buat server Chi untuk testing
 	server := httptest.NewServer(app)
 	defer server.Close()
 
-	// Kirim request ke server
-	req, err := http.NewRequest(http.MethodGet, server.URL+"/api/contacts/"+contact.ID+"/addresses", nil)
+	req, err := http.NewRequest(http.MethodGet, server.URL+BaseContactsAPIURL+"/"+contact.ID+"/addresses", nil)
 	assert.Nil(t, err)
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("Authorization", user.Token)
@@ -146,12 +138,10 @@ func TestListAddressesFailed(t *testing.T) {
 
 	CreateAddresses(t, contact, 5)
 
-	// Buat server Chi untuk testing
 	server := httptest.NewServer(app)
 	defer server.Close()
 
-	// Kirim request ke server
-	req, err := http.NewRequest(http.MethodGet, server.URL+"/api/contacts/"+"wrong"+"/addresses", nil)
+	req, err := http.NewRequest(http.MethodGet, server.URL+BaseContactsAPIURL+"/"+"wrong"+"/addresses", nil)
 	assert.Nil(t, err)
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("Authorization", user.Token)
@@ -178,12 +168,10 @@ func TestGetAddress(t *testing.T) {
 	contact := GetFirstContact(t, user)
 	address := GetFirstAddress(t, contact)
 
-	// Buat server Chi untuk testing
 	server := httptest.NewServer(app)
 	defer server.Close()
 
-	// Kirim request ke server
-	req, err := http.NewRequest(http.MethodGet, server.URL+"/api/contacts/"+contact.ID+"/addresses/"+address.ID, nil)
+	req, err := http.NewRequest(http.MethodGet, server.URL+BaseContactsAPIURL+"/"+contact.ID+"/addresses/"+address.ID, nil)
 	assert.Nil(t, err)
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("Authorization", user.Token)
@@ -217,12 +205,10 @@ func TestGetAddressFailed(t *testing.T) {
 	user := GetFirstUser(t)
 	contact := GetFirstContact(t, user)
 
-	// Buat server Chi untuk testing
 	server := httptest.NewServer(app)
 	defer server.Close()
 
-	// Kirim request ke server
-	req, err := http.NewRequest(http.MethodGet, server.URL+"/api/contacts/"+contact.ID+"/addresses/"+"wrong", nil)
+	req, err := http.NewRequest(http.MethodGet, server.URL+BaseContactsAPIURL+"/"+contact.ID+"/addresses/"+"wrong", nil)
 	assert.Nil(t, err)
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("Authorization", user.Token)
@@ -259,15 +245,12 @@ func TestUpdateAddress(t *testing.T) {
 	bodyJson, err := json.Marshal(requestBody)
 	assert.Nil(t, err)
 
-	// Buat server Chi untuk testing
 	server := httptest.NewServer(app)
 	defer server.Close()
 
-	// Kirim request ke server
-	req, err := http.NewRequest(http.MethodPut, server.URL+"/api/contacts/"+contact.ID+"/addresses/"+address.ID, strings.NewReader(string(bodyJson)))
+	req, err := http.NewRequest(http.MethodPut, server.URL+BaseContactsAPIURL+"/"+contact.ID+"/addresses/"+address.ID, strings.NewReader(string(bodyJson)))
 	assert.Nil(t, err)
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Accept", "application/json")
+	SetupHeader(req)
 	req.Header.Set("Authorization", user.Token)
 
 	client := &http.Client{}
@@ -310,15 +293,12 @@ func TestUpdateAddressFailed(t *testing.T) {
 	bodyJson, err := json.Marshal(requestBody)
 	assert.Nil(t, err)
 
-	// Buat server Chi untuk testing
 	server := httptest.NewServer(app)
 	defer server.Close()
 
-	// Kirim request ke server
-	req, err := http.NewRequest(http.MethodPut, server.URL+"/api/contacts/"+contact.ID+"/addresses/"+address.ID, strings.NewReader(string(bodyJson)))
+	req, err := http.NewRequest(http.MethodPut, server.URL+BaseContactsAPIURL+"/"+contact.ID+"/addresses/"+address.ID, strings.NewReader(string(bodyJson)))
 	assert.Nil(t, err)
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Accept", "application/json")
+	SetupHeader(req)
 	req.Header.Set("Authorization", user.Token)
 
 	client := &http.Client{}
@@ -343,12 +323,10 @@ func TestDeleteAddress(t *testing.T) {
 	contact := GetFirstContact(t, user)
 	address := GetFirstAddress(t, contact)
 
-	// Buat server Chi untuk testing
 	server := httptest.NewServer(app)
 	defer server.Close()
 
-	// Kirim request ke server
-	req, err := http.NewRequest(http.MethodDelete, server.URL+"/api/contacts/"+contact.ID+"/addresses/"+address.ID, nil)
+	req, err := http.NewRequest(http.MethodDelete, server.URL+BaseContactsAPIURL+"/"+contact.ID+"/addresses/"+address.ID, nil)
 	assert.Nil(t, err)
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("Authorization", user.Token)
@@ -375,12 +353,11 @@ func TestDeleteAddressFailed(t *testing.T) {
 	user := GetFirstUser(t)
 	contact := GetFirstContact(t, user)
 
-	// Buat server Chi untuk testing
 	server := httptest.NewServer(app)
 	defer server.Close()
 
 	// Kirim request to server
-	req, err := http.NewRequest(http.MethodDelete, server.URL+"/api/contacts/"+contact.ID+"/addresses/"+"wrong", nil)
+	req, err := http.NewRequest(http.MethodDelete, server.URL+BaseContactsAPIURL+"/"+contact.ID+"/addresses/"+"wrong", nil)
 	assert.Nil(t, err)
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("Authorization", user.Token)

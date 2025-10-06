@@ -14,7 +14,7 @@ var validate *validator.Validate
 var app *chi.Mux
 
 func init() {
-	conf := config.Load()
+	conf := config.Load("test")
 	log = config.NewLlogger(&conf.Logrus)
 	db = config.NewDatabase(&conf.Database, log)
 	validate = config.NewValidator()
