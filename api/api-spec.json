@@ -43,7 +43,7 @@
           }
         },
         "responses": {
-          "200": {
+          "201": {
             "description": "Success register new user",
             "content": {
               "application/json": {
@@ -312,7 +312,7 @@
           }
         },
         "responses": {
-          "200": {
+          "201": {
             "description": "Success create new contact",
             "content": {
               "application/json": {
@@ -716,7 +716,7 @@
           }
         },
         "responses": {
-          "200": {
+          "201": {
             "description": "Success create new address",
             "content": {
               "application/json": {
@@ -964,7 +964,7 @@
           }
         },
         "responses": {
-          "200": {
+          "201": {
             "description": "Success create new address",
             "content": {
               "application/json": {
